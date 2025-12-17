@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>班级早读百花园 - 背诵打卡种树系统</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f9ff;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #6a98f0 0%, #89d4cf 100%);
+            border-radius: 20px;
+            color: white;
+            box-shadow: 0 10px 20px rgba(106, 152, 240, 0.2);
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+        }
+        
+        .header .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            background: white;
+            border-radius: 15px;
+            padding: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .tab-btn {
+            padding: 12px 25px;
+            border: none;
+            background: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #666;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-btn.active {
+            background-color: #6a98f0;
+            color: white;
+            box-shadow: 0 5px 10px rgba(106, 152, 240, 0.3);
+        }
+        
+        .tab-btn i {
+            margin-right: 8px;
+        }
+        
+        .tab-content {
+            display: none;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+            min-height: 500px;
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        h2 {
+            color: #4a6dc5;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eef4ff;
+            font-size: 1.8rem;
+        }
+        
+        /* 花园页面样式 */
+        .garden-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 25px;
+        }
+        
+        .flower-pot {
+            background-color: #f9fbff;
+            border-radius: 15px;
+            padding: 20px 15px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            border: 2px solid #eef4ff;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .flower-pot:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(106, 152, 240, 0.15);
+        }
+        
+        .pot-shape {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .pot-classic { background-color: #e6b89c; border-radius: 10px 10px 50px 50px; }
+        .pot-round { background-color: #9ad4d6; border-radius: 50px 50px 30px 30px; }
+        .pot-square { background-color: #f9b5ac; border-radius: 10px; }
+        .pot-cylinder { background-color: #ffd972; border-radius: 5px; }
+        .pot-wide { background-color: #a8e6cf; border-radius: 20px 20px 50px 50px; width: 120px; }
+        .pot-tall { background-color: #ffaaa5; border-radius: 10px 10px 5px 5px; height: 120px; }
+        
+        .plant {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .student-name {
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+            color: #4a6dc5;
+        }
+        
+        .progress {
+            background-color: #eef4ff;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .progress-bar {
+            background: linear-gradient(to right, #6a98f0, #89d4cf);
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        
+        .progress-text {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .action-btn {
+            background-color: #6a98f0;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+        
+        .action-btn:hover {
+            background-color: #5a88e0;
+        }
+        
+        .action-btn.harvest {
+            background-color: #ff9f68;
+        }
+        
+        .action-btn.harvest:hover {
+            background-color: #ff8f48;
+        }
+        
+        /* 排行榜样式 */
+        .ranking-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .ranking-header {
+            background: linear-gradient(135deg, #6a98f0 0%, #4a6dc5 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px 15px 0 0;
+            text-align: center;
+        }
+        
+        .ranking-list {
+            background: white;
+            border-radius: 0 0 15px 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+        }
+        
+        .ranking-item {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #eef4ff;
+        }
+        
+        .ranking-item:last-child {
+            border-bottom: none;
+        }
+        
+        .rank {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #6a98f0;
+            width: 60px;
+            text-align: center;
+        }
+        
+        .rank-1 { color: #ffd700; }
+        .rank-2 { color: #c0c0c0; }
+        .rank-3 { color: #cd7f32; }
+        
+        .ranking-info {
+            flex: 1;
+        }
+        
+        .ranking-name {
+            font-weight: 600;
+            font-size: 1.3rem;
+            color: #333;
+        }
+        
+        .ranking-badges {
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        .badge-count {
+            color: #ff9f68;
+            font-weight: 700;
+        }
+        
+        /* 播种页面样式 */
+        .seed-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+            justify-content: center;
+        }
+        
+        .option-group {
+            flex: 1;
+            min-width: 300px;
+            background-color: #f9fbff;
+            border-radius: 15px;
+            padding: 20px;
+            border: 2px solid #eef4ff;
+        }
+        
+        .option-title {
+            font-size: 1.3rem;
+            color: #4a6dc5;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .shape-options, .color-options, .seed-options-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .option {
+            width: 80px;
+            height: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: white;
+            border: 2px solid #eef4ff;
+        }
+        
+        .option.selected {
+            border-color: #6a98f0;
+            box-shadow: 0 5px 10px rgba(106, 152, 240, 0.2);
+            transform: scale(1.05);
+        }
+        
+        .option i {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+        
+        .seed-option {
+            width: 100px;
+            height: 100px;
+        }
+        
+        .seed-option i {
+            font-size: 2.5rem;
+        }
+        
+        .plant-btn {
+            display: block;
+            margin: 30px auto;
+            background-color: #4aaf7c;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .plant-btn:hover {
+            background-color: #3a9f6c;
+        }
+        
+        /* 管理页面样式 */
+        .admin-section {
+            margin-bottom: 30px;
+        }
+        
+        .setting-group {
+            background-color: #f9fbff;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 2px solid #eef4ff;
+        }
+        
+        .setting-label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #4a6dc5;
+        }
+        
+        .setting-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #eef4ff;
+            border-radius: 8px;
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+        
+        .setting-input:focus {
+            border-color: #6a98f0;
+            outline: none;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .admin-btn {
+            padding: 12px 25px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background-color: #6a98f0;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #5a88e0;
+        }
+        
+        .btn-secondary {
+            background-color: #f0f4ff;
+            color: #6a98f0;
+            border: 2px solid #6a98f0;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e6ecff;
+        }
+        
+        .btn-danger {
+            background-color: #ff6b6b;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #ff5252;
+        }
+        
+        .log-container {
+            max-height: 300px;
+            overflow-y: auto;
+            background-color: #f9fbff;
+            border-radius: 10px;
+            padding: 15px;
+            border: 2px solid #eef4ff;
+        }
+        
+        .log-item {
+            padding: 10px 15px;
+            border-bottom: 1px solid #eef4ff;
+        }
+        
+        .log-item:last-child {
+            border-bottom: none;
+        }
+        
+        .log-time {
+            color: #888;
+            font-size: 0.9rem;
+        }
+        
+        /* 弹窗样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            animation: modalFadeIn 0.3s ease;
+        }
+        
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        .modal-header {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #4a6dc5;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .harvest-animation {
+            text-align: center;
+            font-size: 5rem;
+            margin: 20px 0;
+            animation: bounce 0.5s ease infinite alternate;
+        }
+        
+        @keyframes bounce {
+            from { transform: scale(1); }
+            to { transform: scale(1.1); }
+        }
+        
+        .badge-notification {
+            text-align: center;
+            background-color: #f0f8ff;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border: 2px dashed #6a98f0;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .garden-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 15px;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .tab-btn {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+            
+            .tabs {
+                flex-wrap: wrap;
+            }
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #888;
+            font-size: 0.9rem;
+            padding-top: 20px;
+            border-top: 1px solid #eef4ff;
+        }
+        
+        .badge-icon {
+            display: inline-block;
+            background-color: #ffd700;
+            color: #333;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 24px;
+            margin-right: 5px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>班级早读百花园</h1>
+        <p class="subtitle">种花背诵早读神器！告别枯燥纸质表格，让背诵变成"开心农场"，可视化成长，成就感满满！</p>
+    </div>
+    
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="garden">
+            <i class="fas fa-seedling"></i> 我的花园
+        </button>
+        <button class="tab-btn" data-tab="sow">
+            <i class="fas fa-plus-circle"></i> 播种新植物
+        </button>
+        <button class="tab-btn" data-tab="ranking">
+            <i class="fas fa-trophy"></i> 徽章排行榜
+        </button>
+        <button class="tab-btn" data-tab="admin">
+            <i class="fas fa-cog"></i> 班级管理
+        </button>
+    </div>
+    
+    <!-- 花园页面 -->
+    <div id="garden" class="tab-content active">
+        <h2><i class="fas fa-tree"></i> 班级花园</h2>
+        <p style="margin-bottom: 20px; color: #666;">点击花盆为植物浇水，植物成熟后可以收获并获得徽章！</p>
+        
+        <div class="garden-grid" id="gardenGrid">
+            <!-- 动态生成花盆 -->
+        </div>
+    </div>
+    
+    <!-- 播种页面 -->
+    <div id="sow" class="tab-content">
+        <h2><i class="fas fa-seedling"></i> 播种小站</h2>
+        <p style="margin-bottom: 20px; color: #666;">为 <span id="studentName" style="font-weight: 600; color: #4a6dc5;">周欣妍</span> 选择专属花盆和植物</p>
+        
+        <div class="seed-options">
+            <div class="option-group">
+                <div class="option-title">第一步：选择花盆形状</div>
+                <div class="shape-options">
+                    <div class="option" data-shape="classic">
+                        <i class="fas fa-square"></i>
+                        <span>经典型</span>
+                    </div>
+                    <div class="option" data-shape="round">
+                        <i class="fas fa-circle"></i>
+                        <span>圆肚型</span>
+                    </div>
+                    <div class="option" data-shape="square">
+                        <i class="fas fa-cube"></i>
+                        <span>方块型</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="option-group">
+                <div class="option-title">第二步：选择花盆颜色</div>
+                <div class="color-options">
+                    <div class="option" data-color="brown" style="color: #8B4513;">
+                        <i class="fas fa-palette"></i>
+                        <span>棕色</span>
+                    </div>
+                    <div class="option" data-color="blue" style="color: #6a98f0;">
+                        <i class="fas fa-palette"></i>
+                        <span>蓝色</span>
+                    </div>
+                    <div class="option selected" data-color="green" style="color: #4aaf7c;">
+                        <i class="fas fa-palette"></i>
+                        <span>绿色</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="option-group">
+                <div class="option-title">第三步：选择植物种子</div>
+                <div class="seed-options-grid">
+                    <div class="option seed-option" data-plant="cherry-blossom">
+                        <i class="fas fa-spa"></i>
+                        <span>樱花树</span>
+                    </div>
+                    <div class="option seed-option selected" data-plant="lavender">
+                        <i class="fas fa-leaf"></i>
+                        <span>薰衣草</span>
+                    </div>
+                    <div class="option seed-option" data-plant="bamboo">
+                        <i class="fas fa-tree"></i>
+                        <span>竹子</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <button class="plant-btn" id="plantBtn">
+            <i class="fas fa-seedling"></i> 种下希望
+        </button>
+    </div>
+    
+    <!-- 排行榜页面 -->
+    <div id="ranking" class="tab-content">
+        <div class="ranking-container">
+            <div class="ranking-header">
+                <h2><i class="fas fa-trophy"></i> 徽章排行榜</h2>
+                <p>根据学生的徽章数量占榜</p>
+            </div>
+            
+            <div class="ranking-list" id="rankingList">
+                <!-- 动态生成排行榜 -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- 管理页面 -->
+    <div id="admin" class="tab-content">
+        <h2><i class="fas fa-cog"></i> 班级管理</h2>
+        
+        <div class="admin-section">
+            <h3><i class="fas fa-sliders-h"></i> 游戏设置</h3>
+            <div class="setting-group">
+                <label class="setting-label">系统名称</label>
+                <input type="text" class="setting-input" id="systemName" value="班级早读百花园" placeholder="请输入系统名称">
+                
+                <label class="setting-label">成长速度（背诵几次成熟？）</label>
+                <input type="number" class="setting-input" id="growthSpeed" value="5" min="1" max="20">
+                
+                <div class="btn-group">
+                    <button class="admin-btn btn-primary" id="saveSettings">保存设置</button>
+                    <button class="admin-btn btn-secondary" id="testClass">生成50人测试班级</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="admin-section">
+            <h3><i class="fas fa-users"></i> 学生管理</h3>
+            <div class="setting-group">
+                <label class="setting-label">批量导入学生名单</label>
+                <textarea class="setting-input" id="studentList" rows="6" placeholder="每行输入一个名字，复制粘贴进来即可。
+例如：
+华安
+周一诺
+卫欣妍
+卫一诺
+张乐
+周欣妍
+蒋大雄"></textarea>
+                
+                <div class="btn-group">
+                    <button class="admin-btn btn-primary" id="saveStudents">保存名单</button>
+                    <button class="admin-btn btn-secondary" id="editStudents">编辑学生名单</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="admin-section">
+            <h3><i class="fas fa-clipboard-list"></i> 成长日志</h3>
+            <div class="setting-group">
+                <div class="log-container" id="logContainer">
+                    <!-- 动态生成日志 -->
+                </div>
+                
+                <div class="btn-group" style="margin-top: 15px;">
+                    <button class="admin-btn btn-secondary" id="clearLog">清空记录</button>
+                    <button class="admin-btn btn-danger" id="resetData">重置本班所有数据</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 收获弹窗 -->
+    <div class="modal" id="harvestModal">
+        <div class="modal-content">
+            <div class="modal-header">恭喜大丰收！</div>
+            <div class="harvest-animation" id="harvestPlant">🌼</div>
+            <div style="text-align: center; font-size: 1.3rem; margin-bottom: 20px;">
+                <span id="harvestStudent">周欣妍</span> 成功收获了<br>
+                <span id="harvestPlantName" style="font-weight: 600; color: #4a6dc5;">薰衣草</span>
+            </div>
+            
+            <div class="badge-notification">
+                <div style="font-size: 1.2rem; margin-bottom: 10px;">太棒了！徽章已放入收集册</div>
+                <div style="font-size: 2rem; margin: 15px 0;">🏆</div>
+                <div>获得 <span style="color: #ff9f68; font-weight: 600;">1 枚</span> 徽章</div>
+            </div>
+            
+            <div style="text-align: center;">
+                <button class="action-btn harvest" id="collectBadge">收下徽章</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>种花背诵早读神器！背书早读积极性拉满，可视化成长，成就感爆棚！</p>
+        <p style="margin-top: 10px;">小红书号：95633004894 | 班级管理 | 早读打卡 | 趣味课堂 | 希沃白板</p>
+    </div>
+
+    <script>
+        // 应用数据
+        let appData = {
+            students: [
+                { id: 1, name: "卫欣妍", potShape: "round", potColor: "green", plant: "cherry-blossom", growth: 5, badgeCount: 18 },
+                { id: 2, name: "蒋大雄", potShape: "square", potColor: "blue", plant: "bamboo", growth: 3, badgeCount: 13 },
+                { id: 3, name: "严平", potShape: "classic", potColor: "brown", plant: "lavender", growth: 5, badgeCount: 10 },
+                { id: 4, name: "赵平", potShape: "classic", potColor: "brown", plant: "cherry-blossom", growth: 5, badgeCount: 10 },
+                { id: 5, name: "周小夫2", potShape: "round", potColor: "green", plant: "bamboo", growth: 4, badgeCount: 10 },
+                { id: 6, name: "冯晓明", potShape: "square", potColor: "blue", plant: "lavender", growth: 3, badgeCount: 9 },
+                { id: 7, name: "陶美", potShape: "round", potColor: "green", plant: "cherry-blossom", growth: 5, badgeCount: 9 }
+            ],
+            settings: {
+                systemName: "班级早读百花园",
+                growthSpeed: 5
+            },
+            logs: [
+                "收获 周欣妍 - 收获了 薰衣草！ 11/30 15:34",
+                "浇水 周欣妍 - 完成了 '背诵任务' 11/30 15:28",
+                "浇水 周欣妍 - 完成了 '背诵任务' 11/30 15:27",
+                "浇水 周欣妍 - 完成了 '背诵任务' 11/30 15:27",
+                "浇水 周欣妍 - 完成了 '背诵任务' 11/30 15:26",
+                "浇水 周欣妍 - 完成了 '背诵任务' 11/30 15:26",
+                "播种 周欣妍 - 种下了 薰衣草 11/30 15:26",
+                "收获 周欣妍 - 收获了 百合花！ 11/30 15:26"
+            ]
+        };
+        
+        // 植物图标映射
+        const plantIcons = {
+            "cherry-blossom": "🌸",
+            "lavender": "🌼",
+            "bamboo": "🎋",
+            "pine": "🌲",
+            "maple": "🍁",
+            "apple": "🌳",
+            "orange": "🍊"
+        };
+        
+        // 植物名称映射
+        const plantNames = {
+            "cherry-blossom": "樱花树",
+            "lavender": "薰衣草",
+            "bamboo": "竹子",
+            "pine": "松树",
+            "maple": "枫树",
+            "apple": "苹果树",
+            "orange": "橘子树"
+        };
+        
+        // 初始化应用
+        document.addEventListener('DOMContentLoaded', function() {
+            // 加载保存的数据
+            loadSavedData();
+            
+            // 初始化页面
+            initGarden();
+            initRanking();
+            initLogs();
+            
+            // 设置选项卡切换
+            setupTabs();
+            
+            // 设置播种页面选项
+            setupSowOptions();
+            
+            // 设置按钮事件
+            setupButtons();
+            
+            // 设置收获弹窗
+            setupHarvestModal();
+        });
+        
+        // 加载保存的数据
+        function loadSavedData() {
+            const savedData = localStorage.getItem('classGardenData');
+            if (savedData) {
+                appData = JSON.parse(savedData);
+                document.getElementById('systemName').value = appData.settings.systemName;
+                document.getElementById('growthSpeed').value = appData.settings.growthSpeed;
+            }
+        }
+        
+        // 保存数据到本地存储
+        function saveData() {
+            localStorage.setItem('classGardenData', JSON.stringify(appData));
+        }
+        
+        // 初始化花园页面
+        function initGarden() {
+            const gardenGrid = document.getElementById('gardenGrid');
+            gardenGrid.innerHTML = '';
+            
+            appData.students.forEach(student => {
+                const isMature = student.growth >= appData.settings.growthSpeed;
+                const progressPercent = (student.growth / appData.settings.growthSpeed) * 100;
+                
+                const potClass = `pot-${student.potShape}`;
+                const plantIcon = plantIcons[student.plant] || "🌱";
+                
+                const flowerPot = document.createElement('div');
+                flowerPot.className = 'flower-pot';
+                flowerPot.dataset.id = student.id;
+                
+                flowerPot.innerHTML = `
+                    <div class="pot-shape ${potClass}" style="background-color: ${getColorCode(student.potColor)};">
+                        <span class="plant">${plantIcon}</span>
+                    </div>
+                    <div class="student-name">${student.name}</div>
+                    <div class="progress">
+                        <div class="progress-bar" style="width: ${progressPercent}%"></div>
+                    </div>
+                    <div class="progress-text">成长进度: ${student.growth}/${appData.settings.growthSpeed}</div>
+                    <button class="action-btn ${isMature ? 'harvest' : ''}">
+                        ${isMature ? '<i class="fas fa-gift"></i> 收获' : '<i class="fas fa-tint"></i> 浇水'}
+                    </button>
+                `;
+                
+                gardenGrid.appendChild(flowerPot);
+            });
+            
+            // 添加花盆点击事件
+            document.querySelectorAll('.flower-pot .action-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const flowerPot = this.closest('.flower-pot');
+                    const studentId = parseInt(flowerPot.dataset.id);
+                    handlePotAction(studentId);
+                });
+            });
+            
+            // 添加花盆点击事件（整个花盆）
+            document.querySelectorAll('.flower-pot').forEach(pot => {
+                pot.addEventListener('click', function() {
+                    const studentId = parseInt(this.dataset.id);
+                    // 可以在这里添加查看花盆详情的功能
+                });
+            });
+        }
+        
+        // 处理花盆操作（浇水/收获）
+        function handlePotAction(studentId) {
+            const student = appData.students.find(s => s.id === studentId);
+            const isMature = student.growth >= appData.settings.growthSpeed;
+            
+            if (isMature) {
+                // 收获植物
+                showHarvestModal(student);
+            } else {
+                // 浇水
+                student.growth++;
+                
+                // 添加日志
+                const now = new Date();
+                const timeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+                appData.logs.unshift(`浇水 ${student.name} - 完成了 "背诵任务" ${now.getMonth()+1}/${now.getDate()} ${timeStr}`);
+                
+                // 更新花园显示
+                initGarden();
+                initLogs();
+                saveData();
+                
+                // 显示成功提示
+                showNotification(`${student.name} 的植物成长了！`);
+            }
+        }
+        
+        // 显示收获弹窗
+        function showHarvestModal(student) {
+            const modal = document.getElementById('harvestModal');
+            const plantIcon = plantIcons[student.plant] || "🌱";
+            const plantName = plantNames[student.plant] || "植物";
+            
+            document.getElementById('harvestStudent').textContent = student.name;
+            document.getElementById('harvestPlant').textContent = plantIcon;
+            document.getElementById('harvestPlantName').textContent = plantName;
+            
+            modal.classList.add('active');
+            
+            // 设置收获处理
+            document.getElementById('collectBadge').onclick = function() {
+                // 增加徽章数量
+                student.badgeCount++;
+                // 重置成长进度
+                student.growth = 0;
+                // 随机选择新植物
+                const plantTypes = Object.keys(plantIcons);
+                student.plant = plantTypes[Math.floor(Math.random() * plantTypes.length)];
+                
+                // 添加日志
+                const now = new Date();
+                const timeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+                appData.logs.unshift(`收获 ${student.name} - 收获了 ${plantName}！ ${now.getMonth()+1}/${now.getDate()} ${timeStr}`);
+                
+                // 关闭弹窗
+                modal.classList.remove('active');
+                
+                // 更新页面
+                initGarden();
+                initRanking();
+                initLogs();
+                saveData();
+                
+                // 显示成功提示
+                showNotification(`${student.name} 获得了 1 枚徽章！`);
+            };
+        }
+        
+        // 设置收获弹窗
+        function setupHarvestModal() {
+            const modal = document.getElementById('harvestModal');
+            
+            // 点击弹窗外部关闭
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                }
+            });
+        }
+        
+        // 初始化排行榜
+        function initRanking() {
+            const rankingList = document.getElementById('rankingList');
+            rankingList.innerHTML = '';
+            
+            // 按徽章数量排序
+            const sortedStudents = [...appData.students].sort((a, b) => b.badgeCount - a.badgeCount);
+            
+            sortedStudents.forEach((student, index) => {
+                const rank = index + 1;
+                const rankingItem = document.createElement('div');
+                rankingItem.className = 'ranking-item';
+                
+                rankingItem.innerHTML = `
+                    <div class="rank rank-${rank}">${rank}</div>
+                    <div class="ranking-info">
+                        <div class="ranking-name">${student.name}</div>
+                        <div class="ranking-badges">徽章数：<span class="badge-count">${student.badgeCount}</span></div>
+                    </div>
+                    <div class="badge-icon">${student.badgeCount}</div>
+                `;
+                
+                rankingList.appendChild(rankingItem);
+            });
+        }
+        
+        // 初始化日志
+        function initLogs() {
+            const logContainer = document.getElementById('logContainer');
+            logContainer.innerHTML = '';
+            
+            appData.logs.forEach(log => {
+                const logItem = document.createElement('div');
+                logItem.className = 'log-item';
+                logItem.textContent = log;
+                logContainer.appendChild(logItem);
+            });
+        }
+        
+        // 设置选项卡切换
+        function setupTabs() {
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // 移除所有active类
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+                    
+                    // 添加当前active类
+                    this.classList.add('active');
+                    const tabId = this.dataset.tab;
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+        }
+        
+        // 设置播种页面选项
+        function setupSowOptions() {
+            // 花盆形状选项
+            document.querySelectorAll('[data-shape]').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('[data-shape]').forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                });
+            });
+            
+            // 花盆颜色选项
+            document.querySelectorAll('[data-color]').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('[data-color]').forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                });
+            });
+            
+            // 植物种子选项
+            document.querySelectorAll('[data-plant]').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('[data-plant]').forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                });
+            });
+        }
+        
+        // 设置按钮事件
+        function setupButtons() {
+            // 播种按钮
+            document.getElementById('plantBtn').addEventListener('click', function() {
+                const selectedShape = document.querySelector('[data-shape].selected').dataset.shape;
+                const selectedColor = document.querySelector('[data-color].selected').dataset.color;
+                const selectedPlant = document.querySelector('[data-plant].selected').dataset.plant;
+                
+                // 创建新学生
+                const newId = appData.students.length > 0 ? Math.max(...appData.students.map(s => s.id)) + 1 : 1;
+                const newStudent = {
+                    id: newId,
+                    name: `学生${newId}`,
+                    potShape: selectedShape,
+                    potColor: selectedColor,
+                    plant: selectedPlant,
+                    growth: 0,
+                    badgeCount: 0
+                };
+                
+                appData.students.push(newStudent);
+                
+                // 添加日志
+                const now = new Date();
+                const timeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+                appData.logs.unshift(`播种 ${newStudent.name} - 种下了 ${plantNames[selectedPlant]} ${now.getMonth()+1}/${now.getDate()} ${timeStr}`);
+                
+                // 更新页面
+                initGarden();
+                initLogs();
+                saveData();
+                
+                // 显示成功提示
+                showNotification(`成功为 ${newStudent.name} 种下${plantNames[selectedPlant]}！`);
+                
+                // 切换到花园页面
+                document.querySelector('[data-tab="garden"]').click();
+            });
+            
+            // 保存设置
+            document.getElementById('saveSettings').addEventListener('click', function() {
+                appData.settings.systemName = document.getElementById('systemName').value;
+                appData.settings.growthSpeed = parseInt(document.getElementById('growthSpeed').value);
+                
+                // 更新标题
+                document.querySelector('.header h1').textContent = appData.settings.systemName;
+                
+                // 更新花园显示
+                initGarden();
+                saveData();
+                
+                showNotification('设置已保存！');
+            });
+            
+            // 生成测试班级
+            document.getElementById('testClass').addEventListener('click', function() {
+                const testNames = [
+                    "华安", "周一诺", "卫欣妍", "卫一诺", "张乐", "周欣妍", "蒋大雄", 
+                    "杨大壮", "褚欣怡", "华大壮", "崔浩然", "李平", "周小天2", 
+                    "郑晓明", "金瑞红", "赵美", "杨爱莲", "李诺丽", "林旭昊", 
+                    "朱美", "唐浩宇", "刘一凡", "陈小春", "王小虎", "张小花",
+                    "赵铁柱", "钱多多", "孙小美", "李雷", "韩梅梅", "林涛",
+                    "魏晨", "吴小凡", "郑成功", "王建国", "冯宝宝", "陈小宝",
+                    "楚云飞", "何建国", "吕秀才", "郭芙蓉", "祝无双", "白展堂",
+                    "佟湘玉", "莫小贝", "邢育森", "燕小六", "李大嘴", "杨慧兰"
+                ];
+                
+                appData.students = [];
+                const plantTypes = Object.keys(plantIcons);
+                const potShapes = ["classic", "round", "square"];
+                const potColors = ["brown", "blue", "green"];
+                
+                testNames.forEach((name, index) => {
+                    appData.students.push({
+                        id: index + 1,
+                        name: name,
+                        potShape: potShapes[Math.floor(Math.random() * potShapes.length)],
+                        potColor: potColors[Math.floor(Math.random() * potColors.length)],
+                        plant: plantTypes[Math.floor(Math.random() * plantTypes.length)],
+                        growth: Math.floor(Math.random() * 6),
+                        badgeCount: Math.floor(Math.random() * 20)
+                    });
+                });
+                
+                // 更新页面
+                initGarden();
+                initRanking();
+                saveData();
+                
+                showNotification('已生成50人测试班级！');
+            });
+            
+            // 保存学生名单
+            document.getElementById('saveStudents').addEventListener('click', function() {
+                const studentListText = document.getElementById('studentList').value;
+                const names = studentListText.split('\n').filter(name => name.trim() !== '');
+                
+                if (names.length === 0) {
+                    alert('请输入至少一个学生姓名！');
+                    return;
+                }
+                
+                appData.students = [];
+                const plantTypes = Object.keys(plantIcons);
+                const potShapes = ["classic", "round", "square"];
+                const potColors = ["brown", "blue", "green"];
+                
+                names.forEach((name, index) => {
+                    appData.students.push({
+                        id: index + 1,
+                        name: name.trim(),
+                        potShape: potShapes[Math.floor(Math.random() * potShapes.length)],
+                        potColor: potColors[Math.floor(Math.random() * potColors.length)],
+                        plant: plantTypes[Math.floor(Math.random() * plantTypes.length)],
+                        growth: Math.floor(Math.random() * 3),
+                        badgeCount: 0
+                    });
+                });
+                
+                // 更新页面
+                initGarden();
+                initRanking();
+                saveData();
+                
+                showNotification(`已导入 ${names.length} 名学生！`);
+            });
+            
+            // 编辑学生名单
+            document.getElementById('editStudents').addEventListener('click', function() {
+                const names = appData.students.map(student => student.name).join('\n');
+                document.getElementById('studentList').value = names;
+                showNotification('学生名单已加载到编辑框！');
+            });
+            
+            // 清空日志
+            document.getElementById('clearLog').addEventListener('click', function() {
+                if (confirm('确定要清空所有成长日志吗？')) {
+                    appData.logs = [];
+                    initLogs();
+                    saveData();
+                    showNotification('成长日志已清空！');
+                }
+            });
+            
+            // 重置数据
+            document.getElementById('resetData').addEventListener('click', function() {
+                if (confirm('确定要重置本班所有数据吗？此操作不可撤销！')) {
+                    localStorage.removeItem('classGardenData');
+                    location.reload();
+                }
+            });
+        }
+        
+        // 显示通知
+        function showNotification(message) {
+            // 创建一个临时通知元素
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background-color: #4aaf7c;
+                color: white;
+                padding: 15px 25px;
+                border-radius: 10px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                z-index: 1000;
+                font-weight: 600;
+                animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s;
+                max-width: 300px;
+            `;
+            
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            // 3秒后移除通知
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 3000);
+            
+            // 添加动画
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideIn {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                @keyframes fadeOut {
+                    from { opacity: 1; }
+                    to { opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        // 获取颜色代码
+        function getColorCode(colorName) {
+            const colors = {
+                "brown": "#8B4513",
+                "blue": "#6a98f0",
+                "green": "#4aaf7c",
+                "red": "#ff6b6b",
+                "yellow": "#ffd972",
+                "purple": "#9b59b6"
+            };
+            return colors[colorName] || "#8B4513";
+        }
+    </script>
+</body>
+</html>
