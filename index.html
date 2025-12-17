@@ -696,13 +696,13 @@
                 <label class="setting-label">批量导入学生名单</label>
                 <textarea class="setting-input" id="studentList" rows="6" placeholder="每行输入一个名字，复制粘贴进来即可。
 例如：
-华安
-周一诺
-卫欣妍
-卫一诺
-张乐
-周欣妍
-蒋大雄"></textarea>
+1
+2
+3
+4
+5
+6
+7"></textarea>
                 
                 <div class="btn-group">
                     <button class="admin-btn btn-primary" id="saveStudents">保存名单</button>
@@ -732,7 +732,7 @@
             <div class="modal-header">恭喜大丰收！</div>
             <div class="harvest-animation" id="harvestPlant">🌼</div>
             <div style="text-align: center; font-size: 1.3rem; margin-bottom: 20px;">
-                <span id="harvestStudent">周欣妍</span> 成功收获了<br>
+                <span id="harvestStudent">周 </span> 成功收获了<br>
                 <span id="harvestPlantName" style="font-weight: 600; color: #4a6dc5;">薰衣草</span>
             </div>
             
@@ -757,27 +757,27 @@
         // 应用数据
         let appData = {
             students: [
-                { id: 1, name: "卫欣妍", potShape: "round", potColor: "green", plant: "cherry-blossom", growth: 5, badgeCount: 18 },
-                { id: 2, name: "蒋大雄", potShape: "square", potColor: "blue", plant: "bamboo", growth: 3, badgeCount: 13 },
-                { id: 3, name: "严平", potShape: "classic", potColor: "brown", plant: "lavender", growth: 5, badgeCount: 10 },
-                { id: 4, name: "赵平", potShape: "classic", potColor: "brown", plant: "cherry-blossom", growth: 5, badgeCount: 10 },
-                { id: 5, name: "周小夫2", potShape: "round", potColor: "green", plant: "bamboo", growth: 4, badgeCount: 10 },
-                { id: 6, name: "冯晓明", potShape: "square", potColor: "blue", plant: "lavender", growth: 3, badgeCount: 9 },
-                { id: 7, name: "陶美", potShape: "round", potColor: "green", plant: "cherry-blossom", growth: 5, badgeCount: 9 }
+                { id: 1, name: "1", potShape: "round", potColor: "green", plant: "cherry-blossom", growth: 5, badgeCount: 18 },
+                { id: 2, name: "2", potShape: "square", potColor: "blue", plant: "bamboo", growth: 3, badgeCount: 13 },
+                { id: 3, name: "3", potShape: "classic", potColor: "brown", plant: "lavender", growth: 5, badgeCount: 10 },
+                { id: 4, name: "4", potShape: "classic", potColor: "brown", plant: "cherry-blossom", growth: 5, badgeCount: 10 },
+                { id: 5, name: "5", potShape: "round", potColor: "green", plant: "bamboo", growth: 4, badgeCount: 10 },
+                { id: 6, name: "6", potShape: "square", potColor: "blue", plant: "lavender", growth: 3, badgeCount: 9 },
+                { id: 7, name: "7", potShape: "round", potColor: "green", plant: "cherry-blossom", growth: 5, badgeCount: 9 }
             ],
             settings: {
                 systemName: "班级早读百花园",
                 growthSpeed: 5
             },
             logs: [
-                "收获 周欣妍 - 收获了 薰衣草！ 11/30 15:34",
-                "浇水 周欣妍 - 完成了 '背诵任务' 11/30 15:28",
-                "浇水 周欣妍 - 完成了 '背诵任务' 11/30 15:27",
-                "浇水 周欣妍 - 完成了 '背诵任务' 11/30 15:27",
-                "浇水 周欣妍 - 完成了 '背诵任务' 11/30 15:26",
-                "浇水 周欣妍 - 完成了 '背诵任务' 11/30 15:26",
-                "播种 周欣妍 - 种下了 薰衣草 11/30 15:26",
-                "收获 周欣妍 - 收获了 百合花！ 11/30 15:26"
+                "收获 周 - 收获了 薰衣草！ 11/30 15:34",
+                "浇水 周 - 完成了 '背诵任务' 11/30 15:28",
+                "浇水 周 - 完成了 '背诵任务' 11/30 15:27",
+                "浇水 周 - 完成了 '背诵任务' 11/30 15:27",
+                "浇水 周 - 完成了 '背诵任务' 11/30 15:26",
+                "浇水 周 - 完成了 '背诵任务' 11/30 15:26",
+                "播种 周 - 种下了 薰衣草 11/30 15:26",
+                "收获 周 - 收获了 百合花！ 11/30 15:26"
             ]
         };
         
